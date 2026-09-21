@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Меридиан",
+      "hasCanvas": false,
+      "bodyTextLen": 1193,
+      "bodyTextHash": "66dc1e7850bb06f78c86988202c8c547daed00b8217873fc8012dbe292458349",
+      "bodyTextPrefix": "Меридиан ГРУППА КОМПАНИЙ АО «МЕРИДИАН» · МОСКВА, 1994 Корпоратив",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Меридиан",
+      "hasCanvas": false,
+      "bodyTextLen": 1193,
+      "bodyTextHash": "66dc1e7850bb06f78c86988202c8c547daed00b8217873fc8012dbe292458349",
+      "bodyTextPrefix": "Меридиан ГРУППА КОМПАНИЙ АО «МЕРИДИАН» · МОСКВА, 1994 Корпоратив",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

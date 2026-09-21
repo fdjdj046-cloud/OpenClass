@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Этап 1: DevTools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>[ CTF: Взлом Веб-Сервера ]</h1>
+        <div class="nav-bar">
+            <span class="nav-item active">1. DevTools</span>
+            <span class="nav-item">2. IDOR (URL)</span>
+            <span class="nav-item">3. SQL Injection</span>
+            <span class="nav-item">4. Web Shell</span>
+        </div>
+    </header>
+
+    <div class="card">
+        <span class="badge">Уровень 1: Обход клиентских ограничений</span>
+        <p class="task">
+            Кнопка входа заблокирована фронтендом.<br>
+            <strong>Задача:</strong> Откройте Инспектор кода (<code>F12</code> или ПКМ &rarr; <em>Посмотреть код</em>), найдите кнопку и удалите атрибут <code>disabled="disabled"</code>, затем нажмите её.
+        </p>
+
+        <div class="box portal">
+            <p>Портал авторизации филиала</p>
+            <button id="target-btn" class="btn" disabled="disabled">Войти в корпоративный портал</button>
+        </div>
+
+        <div id="success-block" class="box success" hidden>
+            <p class="success-title"><strong>&#10004; ДОСТУП РАЗБЛОКИРОВАН</strong></p>
+            <p>Атрибут <code>disabled</code> существовал только на стороне клиента. Сервер никогда не проверял его — вы обошли ограничение простым редактированием DOM.</p>
+            <p class="note">Уязвимость: доверие фронтенду при авторизации.</p>
+        </div>
+
+        <div id="next-block" class="actions" hidden>
+            <a href="level2.html?id=105" class="btn btn-next">Перейти к профилю (Этап 2) &rarr;</a>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('target-btn');
+        const successBlock = document.getElementById('success-block');
+        const nextBlock = document.getElementById('next-block');
+
+        btn.addEventListener('click', () => {
+            if (!btn.hasAttribute('disabled')) {
+                successBlock.hidden = false;
+                nextBlock.hidden = false;
+                btn.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

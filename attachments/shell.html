@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Этап 4: Web Shell</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>[ CTF: Взлом Веб-Сервера ]</h1>
+        <div class="nav-bar">
+            <span class="nav-item done">&#10004; 1. DevTools</span>
+            <span class="nav-item done">&#10004; 2. IDOR</span>
+            <span class="nav-item done">&#10004; 3. SQLi</span>
+            <span class="nav-item active">4. Web Shell</span>
+        </div>
+    </header>
+
+    <div class="card">
+        <span class="badge">Уровень 4: Исполнение команд на сервере</span>
+        <p class="task">
+            Инъекция открыла прямой доступ к системному шеллу веб-сервера.<br>
+            <strong>Задача:</strong> Посмотрите список файлов командой <code>ls</code> и прочитайте секретный флаг с помощью команды <code>cat [имя_файла]</code>.
+        </p>
+
+        <div class="term" onclick="document.getElementById('cmd').focus()">
+            <div id="history" class="term-history">Linux web-corp 5.15.0-x86_64
+Успешный вход под учетной записью: root (uid=0)
+Введите "help" для списка доступных команд.
+</div>
+            <div class="term-row">
+                <span class="term-prompt">root@web-corp:~#</span>
+                <input type="text" id="cmd" class="term-input" autofocus autocomplete="off" spellcheck="false">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById('cmd');
+        const history = document.getElementById('history');
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const command = input.value.trim();
+                handle(command);
+                input.value = '';
+            }
+        });
+
+        function handle(cmd) {
+            let out = `\nroot@web-corp:~# ${cmd}`;
+            const clean = cmd.toLowerCase().trim();
+
+            if (clean === 'help') {
+                out += `\nКоманды: ls (список), cat [файл] (просмотр), whoami, clear`;
+            } else if (clean === 'ls' || clean === 'dir') {
+                out += `\nserver.py   users.db   SECRET_FLAG.txt   config.json`;
+            } else if (clean === 'whoami') {
+                out += `\nroot (Superuser / Полный доступ)`;
+            } else if (clean === 'cat secret_flag.txt' || clean === 'cat ./secret_flag.txt') {
+                out += `\n[+] Извлечение флага... Перенаправление на экран результатов...`;
+                history.innerText += out;
+                setTimeout(() => { window.location.href = 'victory.html'; }, 1000);
+                return;
+            } else if (clean.startsWith('cat ')) {
+                out += `\n[Файл зашифрован. Ищите SECRET_FLAG.txt]`;
+            } else if (clean === 'clear') {
+                history.innerText = 'Сессия root активна.';
+                return;
+            } else if (clean !== '') {
+                out += `\nbash: ${cmd}: команда не найдена. Напишите help.`;
+            }
+
+            history.innerText += out;
+            history.scrollTop = history.scrollHeight;
+        }
+    </script>
+</body>
+</html>

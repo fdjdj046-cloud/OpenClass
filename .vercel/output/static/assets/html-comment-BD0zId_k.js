@@ -1,0 +1,1 @@
+import{a as e,c as t,o as n}from"./utils-mFqThXn6.js";var r=t(n(),1),i=e();function a({text:e}){let t=(0,r.useRef)(null);return(0,r.useEffect)(()=>{let n=t.current;n&&!n.dataset.placed&&(n.dataset.placed=`1`,n.replaceWith(document.createComment(` ${e} `)))},[e]),(0,i.jsx)(`span`,{ref:t,hidden:!0})}export{a as t};

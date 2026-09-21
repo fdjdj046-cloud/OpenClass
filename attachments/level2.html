@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Этап 2: IDOR</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>[ CTF: Взлом Веб-Сервера ]</h1>
+        <div class="nav-bar">
+            <span class="nav-item done">&#10004; 1. DevTools</span>
+            <span class="nav-item active">2. IDOR (URL)</span>
+            <span class="nav-item">3. SQL Injection</span>
+            <span class="nav-item">4. Web Shell</span>
+        </div>
+    </header>
+
+    <div class="card">
+        <span class="badge">Уровень 2: Небезопасная прямая ссылка (IDOR)</span>
+        <p class="task">
+            Вы вошли в систему. Посмотрите на <strong>адресную строку вашего браузера</strong> сверху.<br>
+            Сейчас там параметр: <code>level2.html?id=105</code>.<br>
+            <strong>Задача:</strong> Замените в строке браузера <code>id=105</code> на <code>id=1</code> (аккаунт Администратора) и нажмите <strong>Enter</strong> для перезагрузки.
+        </p>
+
+        <div id="profile-card" class="box">
+            <!-- Сюда JS вставит профиль в зависимости от URL -->
+        </div>
+
+        <div id="next-block" class="actions" hidden>
+            <a href="level3.html" class="btn btn-next">Перейти к панели БД (Этап 3) &rarr;</a>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        let id = params.get('id');
+
+        // Если открыли без параметра, выставляем по умолчанию 105
+        if (!id) {
+            window.location.href = 'level2.html?id=105';
+        }
+
+        const profileCard = document.getElementById('profile-card');
+        const nextBlock = document.getElementById('next-block');
+
+        if (id === '1') {
+            profileCard.innerHTML = `
+                <p class="success-title"><strong>&#10004; ДОСТУП ПОЛУЧЕН: ГЛАВНЫЙ АДМИНИСТРАТОР</strong></p>
+                <p><strong>Пользователь:</strong> root_admin</p>
+                <p><strong>Права:</strong> Полный доступ к серверам базы данных</p>
+                <p class="note">Уязвимость найдена: сервер отдает чужие профили без проверки сессии пользователя.</p>
+            `;
+            profileCard.classList.add('success');
+            nextBlock.hidden = false;
+        } else {
+            profileCard.innerHTML = `
+                <p><strong>Пользователь:</strong> Стажер (ID: ${id})</p>
+                <p><strong>Права:</strong> Гостевой доступ</p>
+                <p class="note">[Подсказка: Поменяйте параметр ?id= в строке браузера на 1]</p>
+            `;
+        }
+    </script>
+</body>
+</html>

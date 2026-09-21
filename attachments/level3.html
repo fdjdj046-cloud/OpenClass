@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Этап 3: SQL Injection</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>[ CTF: Взлом Веб-Сервера ]</h1>
+        <div class="nav-bar">
+            <span class="nav-item done">&#10004; 1. DevTools</span>
+            <span class="nav-item done">&#10004; 2. IDOR</span>
+            <span class="nav-item active">3. SQL Injection</span>
+            <span class="nav-item">4. Web Shell</span>
+        </div>
+    </header>
+
+    <div class="card">
+        <span class="badge">Уровень 3: Внедрение SQL-кода</span>
+        <p class="task">
+            Перед вами внутренняя форма базы данных. Пароль неизвестен.<br>
+            <strong>Задача:</strong> Используйте классический SQL-payload в поле логина, чтобы закрыть кавычку и сделать условие выборки истинным:<br>
+            <code>' OR 1=1 --</code>
+        </p>
+
+        <div class="box login-form">
+            <label for="user">Логин:</label>
+            <input type="text" id="user" placeholder="admin" autocomplete="off">
+
+            <label for="pass">Пароль:</label>
+            <input type="password" id="pass" placeholder="••••••••">
+
+            <div id="err" class="error" hidden>Ошибка SQL-аутентификации: Неверный пароль.</div>
+
+            <button class="btn btn-wide" onclick="tryLogin()">Авторизоваться</button>
+        </div>
+
+        <div id="success-block" class="box success" hidden>
+            <p class="success-title"><strong>&#10004; SQL-ИНЪЕКЦИЯ СРАБОТАЛА</strong></p>
+            <p>Запрос <code>SELECT * FROM users WHERE login = '' OR 1=1 --'</code> вернул первую запись таблицы — вы вошли без знания пароля.</p>
+            <p class="note">Уязвимость: конкатенация пользовательского ввода в SQL-запрос без экранирования.</p>
+        </div>
+
+        <div id="next-block" class="actions" hidden>
+            <a href="shell.html" class="btn btn-next">Открыть Web Shell (Этап 4) &rarr;</a>
+        </div>
+    </div>
+
+    <script>
+        function tryLogin() {
+            const val = document.getElementById('user').value.toLowerCase().replace(/\s+/g, '');
+            const err = document.getElementById('err');
+            const successBlock = document.getElementById('success-block');
+            const nextBlock = document.getElementById('next-block');
+
+            // Распознаем любые типичные пейлоады: ' or 1=1, admin'--, ' or '1'='1
+            if (val.includes("'or1=1") || val.includes("'or'1'='1") || val.includes("'or''='") || val.includes("admin'--")) {
+                err.hidden = true;
+                successBlock.hidden = false;
+                nextBlock.hidden = false;
+            } else {
+                err.hidden = false;
+            }
+        }
+    </script>
+</body>
+</html>
